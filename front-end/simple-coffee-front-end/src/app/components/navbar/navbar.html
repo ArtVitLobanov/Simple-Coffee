@@ -1,0 +1,13 @@
+<header class="navbar">
+  <nav>
+    <a routerLink="/about" routerLinkActive="active">About</a>
+    <a routerLink="/products" routerLinkActive="active">Products</a>
+    <a routerLink="/cart" routerLinkActive="active">Cart</a>
+    <a routerLink="/profile" routerLinkActive="active" class="acc-btn">Account</a>
+
+    @if (authService.isUserAdmin()) {
+      <a routerLink="/admin" routerLinkActive="active" class="acc-btn">Admin</a>
+    }
+
+  </nav>
+</header>

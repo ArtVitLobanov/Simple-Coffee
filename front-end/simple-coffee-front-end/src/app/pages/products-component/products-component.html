@@ -1,0 +1,94 @@
+<div class="products-container">
+
+  @if (errorMessage()) {
+  <div class="error-banner">
+    {{ errorMessage() }}
+  </div>
+  }
+
+  <h2>Available Products</h2>
+
+  @for (product of products(); track product) {
+    <div class="product-card">
+      
+      <!-- Product row -->
+      <div class="product-main-row">
+        <div class="product-image-container">
+          <img 
+            [src]="product.image ? product.image : '/sample-image.png'" 
+            [alt]="product.name" 
+            class="product-image" 
+          />
+        </div>
+
+        <div class="product-info-col">
+          <h3 class="product-title">{{ product.name }}</h3>
+          <div class="title-divider"></div>
+          <p class="description">{{ product.description }}</p>
+          <div class="price"><strong>Price:</strong> ${{ product.price }}</div>
+        </div>
+
+        <div class="product-actions-col">
+          <label>
+            quantity:
+            <input
+              #quantityInput
+              type="number"
+              min="1"
+              max="12"
+              value="1"
+              class="quantity-input"
+            />
+          </label>
+
+          <button
+            class="btn-add"
+            (click)="onAddToCart(product, quantityInput.valueAsNumber)">
+            Add to cart
+          </button>
+        </div>
+
+      </div>
+
+      @if (isAdmin() && authService.isUserLoggedIn()) {
+        <div class="product-admin-panel">
+          <h4>Edit Product</h4>
+
+          <div class="edit-fields-row">
+            <label>
+              New Name:
+              <input #newNameInput type="text" [value]="product.name" />
+            </label>
+            <label>
+              New Description:
+              <input #newDescInput type="text" [value]="product.description" />
+            </label>
+            <label>
+              New Price:
+              <input #newPriceInput type="number" [value]="product.price" />
+            </label>
+            <label>
+              New Image:
+              <input #imageInput type="file" accept="image/*" class="file-input" />
+            </label>
+
+            <button
+              class="btn-update"
+              (click)="onUpdateProduct(
+                product.name, 
+                newNameInput.value, 
+                newDescInput.value, 
+                newPriceInput.valueAsNumber,
+                imageInput.files
+              )">
+              Save Changes
+            </button>
+          </div>
+        </div>
+        }
+
+    </div>
+  } @empty {
+    <p>No products found or still loading...</p>
+  }
+</div>

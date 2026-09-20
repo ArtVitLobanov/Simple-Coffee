@@ -1,2 +1,2 @@
 # Simple-Coffee
-An online order system for coffee shop
+An online system for coffee shop

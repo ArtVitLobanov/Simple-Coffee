@@ -1,0 +1,71 @@
+<div class="orders-container">
+  
+  @if (errorMessage()) {
+  <div class="error-banner">
+    {{ errorMessage() }}
+  </div>
+  }
+
+  <h2>Order in Cart</h2>
+
+  @if (order.products.length > 0) {
+    <div class="order-card">
+      <h3 class="order-header">Items in Order</h3>
+
+      <div class="products-list">
+        @for (product of order.products; track product) {
+
+          <div class="cart-item-row">
+            <div class="cart-item-image-container">
+              <img 
+                [src]="'/sample-image.png'" 
+                [alt]="product.name" 
+                class="cart-item-image" 
+              />
+            </div>
+
+            <div class="cart-item-info-col">
+              <h4 class="cart-item-title">{{ product.name }}</h4>
+              <div class="title-divider"></div>
+              <p class="description">{{ product.description }}</p>
+            </div>
+
+            <div class="cart-item-stats-col">
+              <span class="unit-price"><strong>Price:</strong> ${{ product.price }}</span>
+              <span class="quantity-badge"><strong>Ordered:</strong> {{ product.amount }}</span>
+              <span class="subtotal"><strong>Subtotal:</strong> ${{ (product.price * product.amount).toFixed(2) }}</span>
+            </div>
+
+            <div class="cart-item-remove-col">
+              <button 
+                class="btn-remove" 
+                title="Remove item" 
+                (click)="onRemoveProduct(product)">
+                &#10005;
+              </button>
+            </div>
+
+          </div>
+        }
+      </div>
+
+      <div class="order-summary-footer">
+        <div class="total-price-display">
+          <span>Total Price:</span>
+          <strong>${{ order.price }}</strong>
+        </div>
+
+        <button
+          class="btn-transaction"
+          (click)="onMakeTransaction(order)">
+          Make Transaction
+        </button>
+      </div>
+
+    </div>
+  } @else {
+    <div class="empty-cart-message">
+      <p>No orders in cart or still loading...</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,89 @@
+<div class="profile-container">
+
+  @if (authService.isUserLoggedIn()) {
+    <!-- User profile -->
+    <div class="profile-wrapper">
+      <div class="card profile-card">
+        <h2>Welcome, {{ authService.getUserName() }}!</h2>
+        <p>Status: Logged In</p>
+        <p>Role: {{ authService.userProfile()?.role || 'User' }}</p>
+        <button class="btn btn-danger" (click)="authService.logoutUser()">Log Out</button>
+      </div>
+
+      <!-- Previous Orders Section  -->
+      <div class="orders-section">
+        <h3>Order History</h3>
+
+        @if (authService.userProfile()?.orders && authService.userProfile()!.orders.length > 0) {
+          <div class="orders-list">
+            @for (order of authService.userProfile()!.orders; track $index) {
+              <div class="order-card">
+                <div class="order-header">
+                  <span class="order-title">Order #{{ $index + 1 }}</span>
+                  <span class="order-total">Total: ${{ order.price.toFixed(2) }}</span>
+                </div>
+
+                <div class="product-mini-list">
+                  @for (product of order.products; track $index) {
+                    <div class="product-mini-card">
+                      <img 
+                        [src]="product.image || 'assets/placeholder.png'" 
+                        [alt]="product.name" 
+                        class="product-mini-img"
+                      />
+                      <div class="product-mini-info">
+                        <span class="product-mini-name">{{ product.name }}</span>
+                        <span class="product-mini-meta">
+                          ${{ product.price }} × {{ product.amount }}
+                        </span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="no-orders">No previous orders found.</p>
+        }
+      </div>
+    </div>
+  } @else {
+    <!-- Login form -->
+    <div class="card login-card">
+      <h2>Sign In</h2>
+
+      @if (authService.errorMessage()) {
+        <div class="error-banner">{{ authService.errorMessage() }}</div>
+      }
+
+      <form (ngSubmit)="authService.loginUser(username, password)">
+        <div class="form-group">
+          <label for="username">Login / Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            [(ngModel)]="username" 
+            placeholder="Enter your username"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            [(ngModel)]="password" 
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sign In</button>
+      </form>
+    </div>
+  }
+</div>
