@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AdminService } from '../../services/admin-service';
+import { ProductsService } from '../../services/products-service';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-admin-component',
@@ -6,4 +9,14 @@ import { Component } from '@angular/core';
   templateUrl: './admin-component.html',
   styleUrl: './admin-component.css',
 })
-export class AdminComponent {}
+export class AdminComponent {
+    constructor(
+        public authService: AuthService,
+        public productsService: ProductsService,
+        public adminService: AdminService
+    ) {}
+
+    ngOnInit(){
+        this.productsService.refreshProducts()
+    }
+}

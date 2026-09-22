@@ -49,12 +49,12 @@ export class DTO {
 
     productDTO(productData: any) : DataModule.ProductData | null {
         let product : DataModule.ProductData = new DataModule.ProductData(
-            productData._id.toString(),
             productData.name,
             productData.description,
             productData.amount,
             productData.price,
-            productData.image
+            productData.image,
+            productData._id.toString(),
         )
 
         return product

@@ -3,7 +3,6 @@ import { HttpClient, HttpErrorResponse, HttpRequest, HttpResponse } from "@angul
 import { DataModels } from "../data-models/data-models";
 import { of, Observable, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
-import { Data } from "@angular/router";
 
 // This service provides the connection with backend server
 
@@ -21,6 +20,7 @@ export class BackendRequestService {
 
                 return rawProducts.map((item) => 
                     new DataModels.ProductData(
+                        item._id || "id_error",
                         item.name || 'X-X-X',
                         item.description || '',
                         item.amount || 1,
@@ -33,10 +33,43 @@ export class BackendRequestService {
         )
     }
 
-    updateProduct(oldName: string, newName: string, newDescription: string, newPrice: number, newImage: string): 
+    deleteProduct(productID: string): Observable<{status: number, message: string}> {
+        return this.http.post<any>(this.backendApiURL + "/products/post-delete-product",
+            { productID },
+            {
+                withCredentials: true,
+                observe: 'response'
+            }
+        ).pipe(
+            map((response: HttpResponse<any>) => ({
+                status: response.status,
+                message: response.body?.message || "Product deleted"
+            })),
+            catchError(this.handleError)
+        )
+    }
+
+    createProduct(name: string, description: string, price: number, image: string): 
+    Observable<{status: number, message: string}> {
+        return this.http.post<any>(this.backendApiURL + "/products/post-create-product",
+            {name, description, price, image},
+            {
+                withCredentials: true,
+                observe: 'response'
+            }
+        ).pipe(
+            map((response: HttpResponse<any>) => ({
+                status: response.status,
+                message: response.body?.message || "Product created"
+            })),
+            catchError(this.handleError)
+        )
+    }
+
+    updateProduct(productID: string, newName: string, newDescription: string, newPrice: number, newImage: string): 
         Observable<{status: number, message: string}> {
             return this.http.post<any>(this.backendApiURL + "/products/post-update-product",
-                { oldName, newName, newDescription, newPrice, newImage},
+                { productID, newName, newDescription, newPrice, newImage},
                 {
                     withCredentials: true,
                     observe: 'response'
@@ -112,6 +145,7 @@ export class BackendRequestService {
                 ? data.orders.map((order: any) => {
                     const mappedProducts: DataModels.ProductData[] = Array.isArray(order.products)
                     ? order.products.map((p: any) => new DataModels.ProductData(
+                        p._id || "id_error",
                         p.name || 'Unnamed Item',
                         p.description || '',
                         p.amount || 1,
@@ -126,6 +160,7 @@ export class BackendRequestService {
 
             // Construct and return the full profile object
             return new DataModels.UserProfileData(
+                data._id || 'id_error',
                 data.name || 'Anonymous User',
                 data.role || 'user',
                 data.orders || mappedOrders

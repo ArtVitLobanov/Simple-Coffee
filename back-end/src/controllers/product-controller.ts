@@ -110,7 +110,9 @@ export class ProductController {
         let updateForm = new DataModule.ProductUpdateForm(
             productID, newName, newDescription, newPrice, newImage
         )
+
         await ModelModule.updateProduct(updateForm)
+
         ViewModule.logEvent(" ~ | POST update product ++")
         return res.status(200).json({message: "Product updated"})
       } catch (error) {
