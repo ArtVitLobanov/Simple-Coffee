@@ -57,14 +57,14 @@
         <div class="error-banner">{{ authService.errorMessage() }}</div>
       }
 
-      <form (ngSubmit)="authService.loginUser(username, password)">
+      <form (ngSubmit)="authService.loginUser(userName.value, userPassword.value)">
         <div class="form-group">
           <label for="username">Login / Username</label>
           <input 
             type="text" 
             id="username" 
             name="username" 
-            [(ngModel)]="username" 
+            #userName 
             placeholder="Enter your username"
             required
           />
@@ -76,7 +76,7 @@
             type="password" 
             id="password" 
             name="password" 
-            [(ngModel)]="password" 
+            #userPassword
             placeholder="Enter your password"
             required
           />

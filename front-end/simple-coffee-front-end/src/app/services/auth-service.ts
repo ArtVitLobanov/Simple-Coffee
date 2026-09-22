@@ -11,8 +11,6 @@ import { DataModels } from '../data-models/data-models';
   providedIn: 'root'
 })
 export class AuthService {
-    //username = ''
-    //password = ''
     errorMessage = signal<string>('')
 
     isLoggedIn = signal<boolean>(false);

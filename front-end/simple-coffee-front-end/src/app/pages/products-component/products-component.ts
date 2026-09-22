@@ -12,14 +12,8 @@ import { ProductsService } from '../../services/products-service';
   styleUrl: './products-component.css',
 })
 export class ProductsComponent implements OnInit {
-  products = signal<DataModels.ProductData[]>([])
-  errorMessage = signal<string>('')
-  isAdmin = signal<boolean>(false)
 
   constructor(
-    public authService: AuthService,
-    public generalService: GeneralService,
-    private backendService: BackendRequestService,
     public productsService: ProductsService
   ) {}
 

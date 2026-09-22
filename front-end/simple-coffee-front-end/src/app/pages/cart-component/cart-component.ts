@@ -11,8 +11,6 @@ import { AuthService } from '../../services/auth-service';
   styleUrl: './cart-component.css',
 })
 export class CartComponent implements OnInit {
-  errorMessage = signal<string>('')
-  order: DataModels.OrderData = new DataModels.OrderData()
 
   constructor(
     public cartService: CartService,
@@ -21,11 +19,4 @@ export class CartComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onRemoveProduct(productToRemove: DataModels.ProductData): void {
-    this.cartService.removeProductFromOrderInCart(productToRemove);
-  }
-
-  onMakeTransaction(order: DataModels.OrderData,) {
-    this.cartService.makeTransaction()
-  }
 }

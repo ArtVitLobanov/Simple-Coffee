@@ -12,23 +12,12 @@ import { DataModels } from '../../data-models/data-models';
     styleUrl: './user-profile-component.css',
 })
 export class UserProfileComponent implements OnInit {
-    isLoggedIn = false;
-    username = '';
-    password = '';
-    errorMessage = signal<string>('');
 
     constructor(
         public authService: AuthService,
-        private backendService: BackendRequestService,
-        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
         this.authService.authUser()
-        this.cdr.detectChanges()
-    }
-
-    reloadPage() {
-        this.cdr.detectChanges()
     }
 }

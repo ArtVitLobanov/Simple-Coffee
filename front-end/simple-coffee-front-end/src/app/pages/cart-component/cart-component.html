@@ -40,7 +40,7 @@
               <button 
                 class="btn-remove" 
                 title="Remove item" 
-                (click)="onRemoveProduct(product)">
+                (click)="cartService.removeProductFromCart(product._id)">
                 &#10005;
               </button>
             </div>
@@ -57,7 +57,7 @@
 
         <button
           class="btn-transaction"
-          (click)="onMakeTransaction(order)">
+          (click)="cartService.makeTransaction()">
           Make Transaction
         </button>
       </div>

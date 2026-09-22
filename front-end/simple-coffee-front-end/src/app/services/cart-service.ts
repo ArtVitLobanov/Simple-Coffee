@@ -19,7 +19,22 @@ export class CartService {
     ) {}
 
     addProductToOrderInCart(product: DataModels.ProductData) {
-      this.orderInCart().addProduct(product)
+        this.errorMessage.set('')
+        const existingProduct = this.orderInCart().products.find(p => p._id === product._id);
+
+        if (existingProduct) {
+            // Product already in cart, just increase quantity
+            existingProduct.amount += product.amount;
+        } else {
+            // New product, push to array with initial amount
+            this.orderInCart().products.push({ ...product, amount: product.amount });
+        }
+
+        // Recalculate price
+        this.orderInCart().price = this.orderInCart().products.reduce(
+            (sum, p) => sum + (p.price * p.amount), 
+            0
+        );
     }
 
     getCartOrder() {
@@ -31,7 +46,10 @@ export class CartService {
     }
 
     makeTransaction():void {
-        this.backendService.makeTransaction(this.orderInCart()).subscribe({
+        this.errorMessage.set('')
+
+        if (this.authService.isLoggedIn()){
+            this.backendService.makeTransaction(this.orderInCart()).subscribe({
             next: (res) => {
                 this.resetCart()
             },
@@ -43,18 +61,25 @@ export class CartService {
                 }
             }
             });
+        } else {
+            this.errorMessage.set("Log in first")
+        }
+        
     }
 
-    removeProductFromOrderInCart(productToRemove: DataModels.ProductData) {
-      // Finding the product to remove
-      this.orderInCart().products = this.orderInCart().products.filter(
-        (product) => product !== productToRemove
-      );
+    removeProductFromCart(productID: string) {
+        this.errorMessage.set('')
+      const currentOrder = this.orderInCart();
 
-      // Recalculating the price of order in cart
-      this.orderInCart().price = this.orderInCart().products.reduce(
-        (sum, p) => sum + (p.price * p.amount), 
-        0
-      );
-  }
+        const indexToRemove = currentOrder.products.findIndex(p => p._id === productID);
+
+        if (indexToRemove !== -1) {
+            currentOrder.products.splice(indexToRemove, 1);
+
+            currentOrder.price = currentOrder.products.reduce(
+            (sum, p) => sum + (p.price * p.amount), 
+            0
+            );
+        }
+    }
 }
