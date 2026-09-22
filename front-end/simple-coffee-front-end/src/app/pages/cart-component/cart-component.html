@@ -1,19 +1,19 @@
 <div class="orders-container">
   
-  @if (errorMessage()) {
+  @if (cartService.errorMessage()) {
   <div class="error-banner">
-    {{ errorMessage() }}
+    {{ cartService.errorMessage() }}
   </div>
   }
 
   <h2>Order in Cart</h2>
 
-  @if (order.products.length > 0) {
+  @if (cartService.orderInCart().products.length > 0) {
     <div class="order-card">
       <h3 class="order-header">Items in Order</h3>
 
       <div class="products-list">
-        @for (product of order.products; track product) {
+        @for (product of cartService.orderInCart().products; track product) {
 
           <div class="cart-item-row">
             <div class="cart-item-image-container">
@@ -52,7 +52,7 @@
       <div class="order-summary-footer">
         <div class="total-price-display">
           <span>Total Price:</span>
-          <strong>${{ order.price }}</strong>
+          <strong>${{ cartService.orderInCart().price }}</strong>
         </div>
 
         <button

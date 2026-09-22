@@ -15,37 +15,17 @@ export class CartComponent implements OnInit {
   order: DataModels.OrderData = new DataModels.OrderData()
 
   constructor(
-    private backendService: BackendRequestService,
-    private authService:  AuthService,
-    private cartService: CartService,
-    private cdr: ChangeDetectorRef  
+    public cartService: CartService,
   ) {}
 
   ngOnInit(): void {
-    this.order = this.cartService.getCartOrder()
-    this.cdr.detectChanges()
   }
 
   onRemoveProduct(productToRemove: DataModels.ProductData): void {
     this.cartService.removeProductFromOrderInCart(productToRemove);
-    this.order = this.cartService.getCartOrder();
-    this.cdr.detectChanges();
   }
 
   onMakeTransaction(order: DataModels.OrderData,) {
-    this.backendService.makeTransaction(order).subscribe({
-      next: (res) => {
-        this.cartService.resetCart()
-        this.order = this.cartService.getCartOrder()
-        this.cdr.detectChanges()
-      },
-      error: (err) => {
-        if (this.authService.isAdmin()) {
-          this.errorMessage.set('Transaction failed ' + err.message )
-        } else {
-          this.errorMessage.set('Transaction failed')
-        }
-      }
-    });
+    this.cartService.makeTransaction()
   }
 }
