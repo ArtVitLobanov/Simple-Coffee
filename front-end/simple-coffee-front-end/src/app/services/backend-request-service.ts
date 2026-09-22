@@ -11,11 +11,11 @@ import { Data } from "@angular/router";
     providedIn: 'root'
 })
 export class BackendRequestService {
-    private backendURL: string = "http://localhost:3000"
+    private backendApiURL: string = "http://localhost:3000/api"
     constructor(private http: HttpClient) {}
 
     getProducts(): Observable<DataModels.ProductData[]> {
-        return this.http.get<any[]>(this.backendURL + "/products").pipe(
+        return this.http.get<any[]>(this.backendApiURL + "/products/get-products").pipe(
             map((rawProducts: any[]) => {
                 if (!Array.isArray(rawProducts)) return []
 
@@ -35,7 +35,7 @@ export class BackendRequestService {
 
     updateProduct(oldName: string, newName: string, newDescription: string, newPrice: number, newImage: string): 
         Observable<{status: number, message: string}> {
-            return this.http.post<any>(this.backendURL + "/update-product",
+            return this.http.post<any>(this.backendApiURL + "/products/post-update-product",
                 { oldName, newName, newDescription, newPrice, newImage},
                 {
                     withCredentials: true,
@@ -51,7 +51,7 @@ export class BackendRequestService {
         }
 
     makeTransaction(order: DataModels.OrderData): Observable<{status: number, message: string}> {
-        return this.http.post<any>(this.backendURL + "/make-transaction",
+        return this.http.post<any>(this.backendApiURL + "/products/post-make-transaction",
             order,
             {
                 withCredentials: true,
@@ -67,7 +67,7 @@ export class BackendRequestService {
     }
 
     isAdmin(): Observable<boolean> {
-        return this.http.get<{ isAdmin: boolean}>(this.backendURL + "/is-admin",
+        return this.http.get<{ isAdmin: boolean}>(this.backendApiURL + "/auth/get-is-admin",
             {
                 withCredentials: true,
                 observe: 'response'
@@ -79,7 +79,7 @@ export class BackendRequestService {
     }
 
     authUser(name: string, password: string): Observable<{status: number, message: string}> {
-        return this.http.post<any>(this.backendURL + "/auth-client", 
+        return this.http.post<any>(this.backendApiURL + "/auth/post-auth-client", 
             { name, password},
             {   
                 withCredentials: true,
@@ -95,12 +95,13 @@ export class BackendRequestService {
     }
 
     getUserProfile(): Observable<DataModels.UserProfileData> {
-        return this.http.get<any>(this.backendURL + "/user-profile", {
+        return this.http.get<any>(this.backendApiURL + "/users/get-user-profile", {
             withCredentials: true,
             observe: 'response'
         }).pipe(
             map((response: HttpResponse<any>) => {
             const data = response.body;
+            console.log(data.body)
 
             if (!data) {
                 throw new Error("Received empty profile response from server.");
@@ -127,7 +128,7 @@ export class BackendRequestService {
             return new DataModels.UserProfileData(
                 data.name || 'Anonymous User',
                 data.role || 'user',
-                mappedOrders
+                data.orders || mappedOrders
             );
             }),
             catchError(this.handleError)

@@ -4,9 +4,9 @@
     <!-- User profile -->
     <div class="profile-wrapper">
       <div class="card profile-card">
-        <h2>Welcome, {{ authService.getUserName() }}!</h2>
+        <h2>Welcome, {{ authService.userProfile()?.name }}!</h2>
         <p>Status: Logged In</p>
-        <p>Role: {{ authService.userProfile()?.role || 'User' }}</p>
+        <p>Role: {{ authService.userProfile()?.role }}</p>
         <button class="btn btn-danger" (click)="authService.logoutUser()">Log Out</button>
       </div>
 

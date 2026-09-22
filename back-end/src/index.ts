@@ -1,8 +1,14 @@
 
-import express, { type Express, type Request, type Response, type NextFunction } from 'express';
-import { ControlModule } from './modules/control-module.js'
+import express, { type Express, type Request, type Response } from 'express';
 import cors from "cors"
 import session from "express-session"
+
+import productsRoutes from "./routes/product-routes.js"
+import authRoutes from "./routes/auth-routes.js"
+import userRoutes from "./routes/user-routes.js"
+
+import { connectToDB } from './config/db.js';
+import { GeneralMiddleware } from './middleware/general-middleware.js';
 
 // Expanding session
 declare module 'express-session'{
@@ -16,8 +22,7 @@ declare module 'express-session'{
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
-const controlModule = new ControlModule()
-controlModule.UTILITY_ConnectToDB()
+connectToDB()
 
 app.use(cors({
   origin: 'http://localhost:4200',
@@ -37,32 +42,17 @@ app.use(session({
   }
 }))
 
-app.get('/', controlModule.MIDDLEWARE_RequiredAuth, (req: Request, res: Response) => {
-  res.send({
-    "text": 'empty page'
-  })
-});
+// routes for products
+app.use("/api/products", productsRoutes)
 
-// Receives auth data (name and password)
-app.post('/auth-client', (req: Request, res: Response) => controlModule.POST_AuthClient(req, res));
+// routes for authorization
+app.use("/api/auth", authRoutes)
 
-// Receives updateProductForm (look in data-module.ts)
-app.post('/update-product', (req: Request, res: Response) => controlModule.POST_UpdateProduct(req, res))
+// routes for user information
+app.use("/api/users", userRoutes)
 
-// Makes transaction for current user
-app.post('/make-transaction', controlModule.MIDDLEWARE_RequiredAuth, (req: Request, res: Response) => controlModule.POST_MakeTransaction(req, res))
-
-// Returns all available products
-app.get('/products', (req: Request, res: Response) => controlModule.GET_Products(req, res).then())
-
-// Checks if user is admin
-app.get('/is-admin', controlModule.MIDDLEWARE_RequiredAuth, (req: Request, res: Response) => controlModule.GET_IsAdmin(req, res))
-
-// Returns user profile
-app.get('/user-profile', controlModule.MIDDLEWARE_RequiredAuth, (req: Request, res: Response) => controlModule.GET_UserProfile(req, res))
-
-app.use(controlModule.MIDDLEWARE_NotFound)
-app.use(controlModule.MIDDLEWARE_ErrorHandler)
+app.use(GeneralMiddleware.notFound)
+app.use(GeneralMiddleware.errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
