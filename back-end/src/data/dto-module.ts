@@ -7,10 +7,10 @@ export class DTO {
             return null
     } else {
             const user: DataModule.UserData = new DataModule.UserData(
+                userData._id.toString(),
                 userData.name,
                 userData.password,
-                userData.role,
-                userData.id
+                userData.role
             )
             if (userData.orders){
                 for (const orderDocument of userData.orders) {
@@ -19,6 +19,7 @@ export class DTO {
 
                 for (const productDocument of productsDocument!) {
                     products.push(new DataModule.ProductData(
+                        productDocument._id.toString(),
                         productDocument.name,
                         productDocument.description,
                         productDocument.amount,
@@ -48,6 +49,7 @@ export class DTO {
 
     productDTO(productData: any) : DataModule.ProductData | null {
         let product : DataModule.ProductData = new DataModule.ProductData(
+            productData._id.toString(),
             productData.name,
             productData.description,
             productData.amount,

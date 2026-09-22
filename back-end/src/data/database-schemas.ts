@@ -7,7 +7,6 @@ const ProductSchema = new Schema({
     price: { type: Number, required: true, unique: false},
     amount: { type: Number, required: true, unique: false},
     image: { type: String, required: false, unique: false},
-    id: { type: Number, required: true, unique: false}
 })
 
 const OrderSchema = new Schema({
@@ -16,7 +15,7 @@ const OrderSchema = new Schema({
 })
 
 const UserSchema = new Schema({
-    name: { type: String, required: true, unique: false},
+    name: { type: String, required: true, unique: true},
     password: { type: String, required: true},
     role: { type: String, required: true},
     orders: { type: [OrderSchema], required: false, unique: false}

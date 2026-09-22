@@ -36,7 +36,7 @@ export class AuthController {
           
           ViewModule.logEvent(" ~ | POST client authorization ++")
 
-          req.session.userId = user.id;
+          req.session.userId = user._id;
           req.session.userName = user.name;
           req.session.userRole = user.role;
 
