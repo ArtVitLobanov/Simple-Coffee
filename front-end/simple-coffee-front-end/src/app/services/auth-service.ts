@@ -11,8 +11,8 @@ import { DataModels } from '../data-models/data-models';
   providedIn: 'root'
 })
 export class AuthService {
-    username = ''
-    password = ''
+    //username = ''
+    //password = ''
     errorMessage = signal<string>('')
 
     isLoggedIn = signal<boolean>(false);
@@ -28,9 +28,8 @@ export class AuthService {
     const savedPassword = localStorage.getItem("password")
 
     if (savedName && savedPassword) {
-        this.username = savedName
-        this.password = savedPassword
-        this.loginUser(this.username, this.password)
+        this.loginUser(savedName, savedPassword)
+        this.fetchProfile()
     } else {
         this.errorMessage.set("No cached login info found. Fill fields, please")
     }
@@ -50,11 +49,9 @@ export class AuthService {
         this.errorMessage.set('')
         this.isLoggedIn.set(true);
           
-        // User browser cache
-        this.username = username
-        this.password = password
-        localStorage.setItem('username', this.username);
-        localStorage.setItem('password', this.password);
+        // Use browser cache
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
 
         this.checkAdminStatus()
         this.fetchProfile()
@@ -71,8 +68,7 @@ export class AuthService {
     logoutUser(): void {
         this.isLoggedIn.set(false);
         this.isAdmin.set(false)
-        this.username = '';
-        this.password = '';
+        this.userProfile.set(undefined)
         localStorage.removeItem('username');
         localStorage.removeItem('password');
     }
@@ -91,7 +87,7 @@ export class AuthService {
     }
 
   getUserName() {
-    return this.username
+    return this.userProfile()?.name
   }
 
   getErrorMessage(){

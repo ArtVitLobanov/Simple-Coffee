@@ -1,33 +1,28 @@
 import { DataModule } from "../data/data-module.js"
 import { DatabaseSchemas } from "../data/database-schemas.js";
 import { DTO } from "../data/dto-module.js";
+import mongoose from 'mongoose'
 
 // This "Model Module" holds logic
 export class ModelModule {
-    private currentUser?: DataModule.UserData | null
-    private DTO: DTO
+    private static dto: DTO = new DTO
 
-    constructor(){
-        this.DTO = new DTO
-    }
-
-    async getUserFromDB(username: string, password: string) : Promise<DataModule.UserData | null> {
+    static async getUserFromDB(username: string, password: string) : Promise<DataModule.UserData | null> {
         let userDocument = await DatabaseSchemas.User.findOne({
             name: username,
             password: password
         })
 
-        let user = this.DTO.userDTO(userDocument)
+        let user = this.dto.userDTO(userDocument)
 
         if (!user) {
             return null
         } else { 
-            this.currentUser = user
             return user
         }
     }
 
-    async updateProduct(form: DataModule.ProductUpdateForm) {
+    static async updateProduct(form: DataModule.ProductUpdateForm) {
         await DatabaseSchemas.Product.updateOne(
             { name: form.oldName},
             { $set: {
@@ -40,46 +35,50 @@ export class ModelModule {
         )
     }
 
-    async userOrderToDB(products: DataModule.ProductData[]) : Promise<void> {
+    static async userOrderToDB(products: DataModule.ProductData[], userId: string) : Promise<void> {
         let order: DataModule.OrderData = new DataModule.OrderData(products)
-
         await DatabaseSchemas.User.updateOne(
-            { _id: Object(this.currentUser?.id) }, 
+            { _id: new mongoose.Types.ObjectId(userId) }, 
             { $push: {
                     orders: order
                 }
-            })
-
-        this.updateCurrentUser()
+            }
+        )
     }
 
-    updateCurrentUser() {
-        this.getUserFromDB(this.currentUser?.name!, this.currentUser?.password!)
-    }
+    static async getUserProfile(userId: string): Promise<DataModule.UserProfileData | null> {
+        try {
+            const doc = await DatabaseSchemas.UserProfile.findOne({ _id: userId });
 
-    getUserProfile() {
-        if (this.currentUser){
-            const userProfile: DataModule.UserProfileData = new DataModule.UserProfileData(
-            this.currentUser?.name,
-            this.currentUser?.role,
-            )
-            
-            for (const orderDocument of this.currentUser.orders) {
-                userProfile.addOrder(this.DTO.orderDTO(orderDocument)!)
+            if (!doc) {
+                return null;
             }
 
-            return userProfile
-        } else {
-            return null
+            const userProfile = new DataModule.UserProfileData(doc.name, doc.role!);
+
+            if (Array.isArray(doc.orders)) {
+                for (let order of doc.orders) {
+                    const mappedOrder = this.dto.orderDTO(order);
+                    if (mappedOrder) {
+                        userProfile.addOrder(mappedOrder);
+                    }
+                }
+            }
+
+            return userProfile;
+
+        } catch (err) {
+            console.log("Error in getUserProfile:", err);
+            return null;
         }
     }
 
-    async getProductsFromDB() : Promise<DataModule.ProductData[] | null> {
+    static async getProductsFromDB() : Promise<DataModule.ProductData[] | null> {
         let productsList = await DatabaseSchemas.Product.find()
         let products: DataModule.ProductData[] = []
 
         for (const productData of productsList){
-            products.push(this.DTO.productDTO(productData)!)
+            products.push(this.dto.productDTO(productData)!)
         }
 
         return products

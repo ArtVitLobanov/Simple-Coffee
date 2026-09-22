@@ -1,28 +1,25 @@
 
 // This "View Module" performs logging
 export class ViewModule{
-    private log: string
-    constructor(){
-        this.log = "STARTUP - " + new Date().toLocaleString() + "\n"
-    }
+    private static log: string = "STARTUP - " + new Date().toLocaleString() + "\n"
 
-    displayText(str: string) {
+    static displayText(str: string) {
         console.log(str)
     }
 
-    logError(errorText: string){
+    static logError(errorText: string){
         let msg = "ERROR - " + new Date().toLocaleString() + ` : ${errorText}`
         this.log += msg + "\n"
         console.log(msg)
     }
 
-    logEvent(eventText: string){
+    static logEvent(eventText: string){
         let msg = "EVENT - " + new Date().toLocaleString() + ` : ${eventText}`
         this.log += msg + "\n"
         console.log(msg)
     }
 
-    displayLog(){
+    static displayLog(){
         console.log(this.log)
     }
 }
