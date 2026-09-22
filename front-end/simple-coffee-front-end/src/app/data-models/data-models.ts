@@ -3,11 +3,13 @@
 export namespace DataModels {
 
     export class UserProfileData {
+        public _id: string
         public name: string
         public role: string
         public orders: Array<OrderData>
 
-        constructor(name: string, role: string, orders: OrderData[]) {
+        constructor(_id: string, name: string, role: string, orders: OrderData[]) {
+            this._id = _id
             this.name = name
             this.role = role
             this.orders = orders
@@ -19,19 +21,23 @@ export namespace DataModels {
     }
 
     export class ProductData {
+        public _id: string
         public name: string
         public description: string
         public amount: number
         public price: number
         public image: string
 
-        constructor(name: string, description: string, amount: number, price: number, image: string) {
-            this.name = name
-            this.description = description
-            this.amount = amount
-            this.price = price
-            this.image = image
-        }
+        constructor(_id: string, name: string, description: string,
+                    amount: number, price: number, image: string) 
+            {
+                this._id = _id
+                this.name = name
+                this.description = description
+                this.amount = amount
+                this.price = price
+                this.image = image
+            }
     }
 
     export class OrderData {

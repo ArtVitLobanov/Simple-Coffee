@@ -1,1 +1,143 @@
-<p>IN DEVELOPMENT</p>
+<div class="products-container">
+
+  @if (productsService.errorMessage()) {
+    <div class="error-banner">
+      {{ productsService.errorMessage() }}
+    </div>
+  }
+
+  <h2>Available Products</h2>
+
+  <!-- Create product -->
+  @if (authService.isAdmin() && authService.isUserLoggedIn()) {
+    <div class="create-product-card">
+      <h3>Create New Product</h3>
+      <div class="create-fields-row">
+        <label>
+          Name:
+          <input #createNameInput type="text" placeholder="Product name" />
+        </label>
+
+        <label>
+          Description:
+          <input #createDescInput type="text" placeholder="Product description" />
+        </label>
+
+        <label>
+          Price:
+          <input #createPriceInput type="number" placeholder="0.00" min="0" step="0.01" />
+        </label>
+
+        <label>
+          Image:
+          <input #createImageInput type="file" accept="image/*" class="file-input" />
+        </label>
+
+        <button 
+          class="btn-create"
+          (click)="productsService.onCreateProduct(
+            createNameInput.value,
+            createDescInput.value,
+            createPriceInput.valueAsNumber,
+            createImageInput.files
+          )">
+          Create Product
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Product List -->
+  @for (product of productsService.products(); track product._id) {
+    <div class="product-card">
+      
+      <!-- Product details row -->
+      <div class="product-main-row">
+        <div class="product-image-container">
+          <img 
+            [src]="product.image ? product.image : '/sample-image.png'" 
+            [alt]="product.name" 
+            class="product-image" 
+          />
+        </div>
+
+        <div class="product-info-col">
+          <h3 class="product-title">{{ product.name }}</h3>
+          <div class="title-divider"></div>
+          <p class="description">{{ product.description }}</p>
+          <div class="price"><strong>Price:</strong> ${{ product.price }}</div>
+        </div>
+
+        <div class="product-actions-col">
+          <label>
+            quantity:
+            <input
+              #quantityInput
+              type="number"
+              min="1"
+              max="12"
+              value="1"
+              class="quantity-input"
+            />
+          </label>
+
+          <button
+            class="btn-add"
+            (click)="productsService.onAddToCart(product, quantityInput.valueAsNumber)">
+            Add to cart
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Admin Panel (edit and delete) -->
+      @if (authService.isAdmin() && authService.isUserLoggedIn()) {
+        <div class="product-admin-panel">
+          <div class="admin-panel-header">
+            <h4>Edit Product</h4>
+            <!-- Red Delete Button -->
+            <button 
+              class="btn-delete"
+              (click)="productsService.onDeleteProduct(product._id)">
+              Delete Product
+            </button>
+          </div>
+
+          <div class="edit-fields-row">
+            <label>
+              New Name:
+              <input #newNameInput type="text" [value]="product.name" />
+            </label>
+            <label>
+              New Description:
+              <input #newDescInput type="text" [value]="product.description" />
+            </label>
+            <label>
+              New Price:
+              <input #newPriceInput type="number" [value]="product.price" />
+            </label>
+            <label>
+              New Image:
+              <input #imageInput type="file" accept="image/*" class="file-input" />
+            </label>
+
+            <button
+              class="btn-update"
+              (click)="productsService.onUpdateProduct(
+                product._id,
+                newNameInput.value, 
+                newDescInput.value, 
+                newPriceInput.valueAsNumber,
+                imageInput.files
+              )">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      }
+
+    </div>
+  } @empty {
+    <p>No products found or still loading...</p>
+  }
+</div>

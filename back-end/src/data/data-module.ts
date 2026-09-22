@@ -1,17 +1,17 @@
-
+import mongoose from "mongoose"
 // This component provides data objects
 export namespace DataModule {
 
     export class UserData{
+        public _id: string
         public name: string
-        public id: string
         public password: string
         public role: string
         public orders: Array<OrderData>
 
-        constructor(name: string, password: string, role: string, id: string) {
+        constructor(_id: string, name: string, password: string, role: string) {
+            this._id = _id
             this.name = name
-            this.id = id
             this.password=password
             this.role = role
             this.orders = []
@@ -24,11 +24,13 @@ export namespace DataModule {
     }
 
     export class UserProfileData {
+        public _id: string
         public name: string
         public role: string
         public orders: Array<OrderData>
 
-        constructor(name: string, role: string) {
+        constructor(_id: string, name: string, role: string) {
+            this._id = _id
             this.name = name
             this.role = role
             this.orders = []
@@ -40,13 +42,16 @@ export namespace DataModule {
     }
 
     export class ProductData {
+        public _id: string
         public name: string
         public description: string
         public amount: number
         public price: number
         public image: string
 
-        constructor(name: string, description: string, amount: number, price: number, image: string) {
+        constructor(name: string, description: string, amount: number,
+             price: number, image: string, _id?: string, ) {
+            this._id = _id || new mongoose.Types.ObjectId().toString();
             this.name = name
             this.description = description
             this.amount = amount
@@ -56,15 +61,15 @@ export namespace DataModule {
     }
 
     export class ProductUpdateForm {
-        public oldName: string
+        public productID: string
         public newName: string
         public newDescription: string
         public amount: number = 1
         public newPrice: number
         public newImage: string
 
-        constructor(oldName: string, newName: string, newDesc: string, newPrice: number, newImage: string) {
-            this.oldName = oldName
+        constructor(productID: string, newName: string, newDesc: string, newPrice: number, newImage: string) {
+            this.productID = productID
             this.newName = newName
             this.newDescription = newDesc
             this.newPrice = newPrice
@@ -73,10 +78,12 @@ export namespace DataModule {
     }
 
     export class OrderData {
-        public products?: Array<ProductData>
+        public _id: string | undefined
+        public products?: ProductData[]
         public price: number
 
-        constructor(products: Array<ProductData>) {
+        constructor(products: ProductData[], _id?: string, ) {
+            this._id = _id || new mongoose.Types.ObjectId().toString();
             this.products = products
             this.price = 0
             

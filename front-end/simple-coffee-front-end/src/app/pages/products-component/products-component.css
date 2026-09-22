@@ -99,55 +99,6 @@
   background-color: #2b6cb0;
 }
 
-.product-admin-panel {
-  border-top: 1px solid #e2e8f0;
-  background-color: #fffaf0;
-  margin: 0 -1.5rem -1.5rem -1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-
-.product-admin-panel h4 {
-  margin: 0 0 0.75rem 0;
-  color: #dd6b20;
-}
-
-.edit-fields-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: flex-end;
-}
-
-.edit-fields-row label {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.85rem;
-  gap: 0.25rem;
-  color: #4a5568;
-}
-
-.edit-fields-row input {
-  padding: 6px 10px;
-  border: 1px solid #cbd5e0;
-  border-radius: 4px;
-}
-
-.btn-update {
-  background-color: #dd6b20;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn-update:hover {
-  background-color: #c05621;
-}
-
 .error-banner {
   background-color: #fef2f2;
   color: #991b1b;

@@ -1,14 +1,14 @@
 <div class="products-container">
 
-  @if (errorMessage()) {
+  @if (productsService.errorMessage()) {
   <div class="error-banner">
-    {{ errorMessage() }}
+    {{ productsService.errorMessage() }}
   </div>
   }
 
   <h2>Available Products</h2>
 
-  @for (product of products(); track product) {
+  @for (product of productsService.products(); track product) {
     <div class="product-card">
       
       <!-- Product row -->
@@ -43,49 +43,12 @@
 
           <button
             class="btn-add"
-            (click)="onAddToCart(product, quantityInput.valueAsNumber)">
+            (click)="productsService.onAddToCart(product, quantityInput.valueAsNumber)">
             Add to cart
           </button>
         </div>
 
       </div>
-
-      @if (isAdmin() && authService.isUserLoggedIn()) {
-        <div class="product-admin-panel">
-          <h4>Edit Product</h4>
-
-          <div class="edit-fields-row">
-            <label>
-              New Name:
-              <input #newNameInput type="text" [value]="product.name" />
-            </label>
-            <label>
-              New Description:
-              <input #newDescInput type="text" [value]="product.description" />
-            </label>
-            <label>
-              New Price:
-              <input #newPriceInput type="number" [value]="product.price" />
-            </label>
-            <label>
-              New Image:
-              <input #imageInput type="file" accept="image/*" class="file-input" />
-            </label>
-
-            <button
-              class="btn-update"
-              (click)="onUpdateProduct(
-                product.name, 
-                newNameInput.value, 
-                newDescInput.value, 
-                newPriceInput.valueAsNumber,
-                imageInput.files
-              )">
-              Save Changes
-            </button>
-          </div>
-        </div>
-        }
 
     </div>
   } @empty {
