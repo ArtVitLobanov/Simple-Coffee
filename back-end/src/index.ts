@@ -10,6 +10,8 @@ import userRoutes from "./routes/user-routes.js"
 import { connectToDB } from './config/db.js';
 import { GeneralMiddleware } from './middleware/general-middleware.js';
 
+//
+
 // Expanding session
 declare module 'express-session'{
   interface SessionData {
