@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BackendRequestService } from '../../services/backend-request-service';
 import { AuthService } from '../../services/auth-service';
-import { DataModels } from '../../data-models/data-models';
 
 @Component({
     selector: 'app-user-profile-component',

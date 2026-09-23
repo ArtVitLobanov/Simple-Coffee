@@ -1,8 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
-import { BackendRequestService } from '../../services/backend-request-service';
+import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart-service';
-import { DataModels } from '../../data-models/data-models';
-import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-cart-component',

@@ -1,7 +1,4 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 import { BackendRequestService } from './backend-request-service';
 import { DataModels } from '../data-models/data-models';
 

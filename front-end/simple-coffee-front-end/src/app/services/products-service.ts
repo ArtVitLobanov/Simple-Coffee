@@ -119,7 +119,4 @@ export class ProductsService {
         this.cartService.addProductToOrderInCart(productToCart);
     }
 
-
-
-
 }

@@ -1,8 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, signal } from '@angular/core';
-import { BackendRequestService } from '../../services/backend-request-service';
-import { GeneralService } from '../../services/general-services';
-import { AuthService } from '../../services/auth-service';
-import { DataModels } from '../../data-models/data-models';
+import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../../services/products-service';
 
 @Component({
