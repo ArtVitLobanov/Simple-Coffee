@@ -19,7 +19,6 @@ export class CartService {
     ) {}
 
     addProductToOrderInCart(product: DataModels.ProductData) {
-        this.errorMessage.set('')
         const existingProduct = this.orderInCart().products.find(p => p._id === product._id);
 
         if (existingProduct) {
